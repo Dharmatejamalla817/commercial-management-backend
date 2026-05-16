@@ -3,70 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zero-Knowledge Guest Mode Platform</title>
+    <title>Premium Cognitive-Reduced Architecture</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/style.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .app-container { width: 100%; max-width: 500px; }
-        .card { border: none; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        body { background-color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; font-family: system-ui, sans-serif; }
+        .app-container { width: 100%; max-width: 450px; }
+        .card { border: none; border-radius: 20px; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.04); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* The Cognitive Load Reducer Magic: Smooth Hidden States */
+        .hidden-step { 
+            opacity: 0; 
+            max-height: 0; 
+            overflow: hidden; 
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, max-height 0.6s ease, transform 0.5s ease;
+        }
+        .reveal-step { 
+            opacity: 1; 
+            max-height: 500px; 
+            transform: translateY(0);
+            margin-top: 1.5rem;
+        }
+        
+        .step-badge { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <!-- Part 1: Interactive Guest Workspace -->
-    <div class="card p-4 mb-4 bg-white">
-        <h5 class="fw-bold text-dark mb-1">⚡ Instant Guest Workspace</h5>
-        <p class="text-muted small">Configure your business preference instantly. No account required yet.</p>
+    <div class="card p-4 bg-white">
         
-        <div class="mb-3">
-            <label class="form-label small fw-semibold">Select Application Blueprint</label>
-            <select id="blueprintSelection" class="form-select" onchange="updateGuestMemory()">
+        <!-- HEADER BLOCK -->
+        <div class="text-center mb-4">
+            <h4 class="fw-bold text-slate-800 mb-1">Commercial Console</h4>
+            <p class="text-secondary small">Zero-Friction Environment Setup</p>
+        </div>
+
+        <!-- STEP 1: GUEST WORKSPACE (ALWAYS VISIBLE) -->
+        <div id="step1Container">
+            <div class="d-flex align-items-center mb-3">
+                <span class="step-badge bg-primary text-white me-2">1</span>
+                <h6 class="mb-0 fw-bold text-slate-700">Select Core Engine Focus</h6>
+            </div>
+            
+            <!-- We add an empty default option to force an active choice -->
+            <select id="blueprintSelection" class="form-select form-select-md py-2.5" onchange="handleStepOneCompletion()">
+                <option value="" disabled selected hidden>Choose your business target...</option>
                 <option value="High-Margin Retail Console">High-Margin Retail Console</option>
                 <option value="Hyper-Local Logistics Routing">Hyper-Local Logistics Routing</option>
                 <option value="Automated Appointment Registry">Automated Appointment Registry</option>
             </select>
         </div>
-        <div class="p-3 bg-light rounded text-secondary small">
-            💾 Live Session Cache: <span id="cacheStatus" class="text-primary fw-bold">Default Blueprint</span>
-        </div>
-    </div>
 
-    <!-- Part 2: Structural Account Finalization -->
-    <div class="card p-4">
-        <h5 class="fw-bold text-primary mb-3">Save Your Environment</h5>
-        <div class="mb-3">
-            <label class="form-label small">Choose Username</label>
-            <input type="text" id="username" class="form-control" placeholder="e.g. founder1">
+        <!-- STEP 2: REGISTRATION DETAILS (HIDDEN UNTIL NEEDED) -->
+        <div id="step2Container" class="hidden-step">
+            <hr class="my-4 text-neutral-200">
+            
+            <div class="d-flex align-items-center mb-3">
+                <span class="step-badge bg-success text-white me-2">2</span>
+                <h6 class="mb-0 fw-bold text-slate-700">Claim and Secure Your Environment</h6>
+            </div>
+            
+            <div class="mb-3">
+                <input type="text" id="username" class="form-control py-2" placeholder="Create Username">
+            </div>
+            <div class="mb-3">
+                <input type="email" id="email" class="form-control py-2" placeholder="Owner Email Address">
+            </div>
+            <div class="mb-3">
+                <input type="password" id="password" class="form-control py-2" placeholder="Security Password">
+            </div>
+            
+            <button onclick="finalizeAccount()" class="btn btn-dark w-100 py-2 fw-semibold mt-2">Initialize Core App</button>
+            <div id="responseMessage" class="mt-3 text-center small fw-bold"></div>
         </div>
-        <div class="mb-3">
-            <label class="form-label small">Email Address</label>
-            <input type="email" id="email" class="form-control" placeholder="name@domain.com">
-        </div>
-        <div class="mb-3">
-            <label class="form-label small">Security Password</label>
-            <input type="password" id="password" class="form-control" placeholder="••••••••">
-        </div>
-        
-        <button onclick="finalizeAccount()" class="btn btn-success w-100 mt-2">Claim This Work & Register</button>
-        <div id="responseMessage" class="mt-3 text-center small fw-bold"></div>
+
     </div>
 </div>
 
 <script>
-// 1. Silently monitor and store the guest configuration choices into browser memory
-function updateGuestMemory() {
+// This function monitors choices and elegantly drops the next phase into view
+function handleStepOneCompletion() {
     const selectedValue = document.getElementById('blueprintSelection').value;
+    
+    // Save to guest memory
     sessionStorage.setItem('tempGuestAction', selectedValue);
-    document.getElementById('cacheStatus').innerText = selectedValue;
+    
+    // Reveal the hidden registration fields smoothly
+    const step2 = document.getElementById('step2Container');
+    step2.classList.add('reveal-step');
 }
 
-// Initialize default choice on window load
-window.onload = function() {
-    updateGuestMemory();
-};
-
-// 2. Package credentials alongside temporary guest logs and ship them to Flask
 async function finalizeAccount() {
     const usernameInput = document.getElementById('username').value;
     const emailInput = document.getElementById('email').value;
@@ -74,7 +101,7 @@ async function finalizeAccount() {
     const currentGuestData = sessionStorage.getItem('tempGuestAction') || "None";
     const messageDiv = document.getElementById('responseMessage');
 
-    messageDiv.innerText = "Processing checkout...";
+    messageDiv.innerText = "Provisioning resources...";
     messageDiv.className = "mt-3 text-center small text-secondary";
 
     const response = await fetch('/register', {
@@ -84,7 +111,7 @@ async function finalizeAccount() {
             username: usernameInput, 
             email: emailInput, 
             password: passwordInput,
-            guestData: currentGuestData // The secret ingredient!
+            guestData: currentGuestData
         })
     });
 
@@ -93,7 +120,7 @@ async function finalizeAccount() {
     if (response.status === 201) {
         messageDiv.innerText = result.message;
         messageDiv.className = "mt-3 text-center small text-success";
-        sessionStorage.clear(); // Wipe guest storage clean upon success
+        sessionStorage.clear();
     } else {
         messageDiv.innerText = result.message;
         messageDiv.className = "mt-3 text-center small text-danger";
