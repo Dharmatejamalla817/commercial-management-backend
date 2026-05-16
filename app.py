@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
 app = Flask(__name__)
 
@@ -48,6 +49,24 @@ def register_user():
     
     return jsonify({"message": "Success: User registered successfully in the database!"}), 201
 
+@app.route("/get-status", methods=["GET"])
+def get_status():
+    # 1. Let's simulate checking for an operational crisis in the database
+    # (In a finished app, this would check if two rows have the same appointment time)
+    has_conflict = True  # Set this to True to test how the UI handles a live database error!
+
+    # 2. Get the current real-world time on the server
+    current_hour = datetime.datetime.now().hour
+
+    # 3. Decision Tree: Determine the "Situation" based on real data
+    if has_conflict:
+        situation = "crisis"
+    elif 9 <= current_hour < 18:  # Between 9:00 AM and 6:00 PM
+        situation = "morning"
+    else:                         # After hours
+        situation = "evening"
+
+    return jsonify({"situation": situation, "hour": current_hour})
 # Home route
 @app.route("/")
 def home():
